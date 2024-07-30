@@ -17,40 +17,10 @@ def adicionar_tarefa():
         locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
         dia_semana_fr = datetime.strptime(data, '%m/%d/%y').strftime('%A')
 
-        nova_tarefa = f"{data} ({dia_semana_en}/{dia_semana_fr}): {tarefa} - {tempo} minutos"
-
-        # Adicionar tarefa ao dicionário de tarefas
-        if data not in tarefas:
-            tarefas[data] = []
-        tarefas[data].append(nova_tarefa)
-
-        # Atualizar a lista de tarefas
-        atualizar_tarefas(data)
-
+        # Adicionar tarefa na lista com os dias da semana em inglês e francês
+        lista_tarefas.insert(tk.END, f"{data} ({dia_semana_en}/{dia_semana_fr}): {tarefa} - {tempo} minutos")
         entrada_tarefa.delete(0, tk.END)
         entrada_tempo.delete(0, tk.END)
-
-def converter_minutos():
-    try:
-        minutos = int(entrada_tempo.get())
-        horas = minutos // 60
-        minutos_restantes = minutos % 60
-        return f"{horas} horas e {minutos_restantes} minutos"
-    except ValueError:
-        return "Entrada inválida"
-
-def atualizar_tarefas(data):
-    lista_tarefas.delete(0, tk.END)
-    tarefas_do_dia = tarefas.get(data, [])
-    if tarefas_do_dia:
-        for tarefa in tarefas_do_dia:
-            lista_tarefas.insert(tk.END, tarefa)
-    else:
-        lista_tarefas.insert(tk.END, "Nenhuma tarefa realizada nesse dia.")
-
-def mostrar_tarefas_do_dia(event):
-    data = calendario.get_date()
-    atualizar_tarefas(data)
 
 def trocar_fundo(cor):
     # Atualiza a cor de fundo de todos os widgets
@@ -59,11 +29,9 @@ def trocar_fundo(cor):
     frame_lista_calendario.config(bg=cor)
     calendario.config(background=cor)
     lista_tarefas.config(bg=cor, fg='black' if cor == 'white' else 'white')
-    botao_adicionar.config(style='TButton')
-    style.configure('TButton', background=cor, padding=[10, 5])
 
 root = tk.Tk()
-root.title("MetaDiaria - Denizard")
+root.title("Gerenciador de Tarefas")
 root.geometry("800x600")
 
 # Configuração do estilo
@@ -71,7 +39,6 @@ style = ttk.Style()
 style.configure('TButton', font=('JetBrains Mono', 10))
 style.configure('TEntry', font=('JetBrains Mono', 12))
 style.configure('TLabel', font=('JetBrains Mono', 12))
-style.configure('TButton', padding=[10, 5], relief='flat', borderwidth=1)  # Ajuste no botão
 
 # Frame principal
 frame_principal = tk.Frame(root, bg='purple')
@@ -86,12 +53,11 @@ entrada_tarefa = ttk.Entry(frame_entrada, width=30, font=('JetBrains Mono', 12))
 entrada_tarefa.grid(row=0, column=1, padx=5, pady=5)
 
 ttk.Label(frame_entrada, text="Tempo (minutos):", background='purple').grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
-entrada_tempo = ttk.Entry(frame_entrada, width=10, font=('JetBrains Mono', 12), validate='key')
-entrada_tempo['validatecommand'] = (entrada_tempo.register(lambda P: P.isdigit() or P == ''), '%P')
+entrada_tempo = ttk.Entry(frame_entrada, width=10, font=('JetBrains Mono', 12))
 entrada_tempo.grid(row=1, column=1, padx=5, pady=5)
 
 botao_adicionar = ttk.Button(frame_entrada, text="Adicionar", command=adicionar_tarefa)
-botao_adicionar.grid(row=2, column=0, columnspan=2, pady=10, ipadx=15, ipady=10)
+botao_adicionar.grid(row=2, column=0, columnspan=2, pady=10)
 
 # Sub-frame para a lista de tarefas e calendário
 frame_lista_calendario = tk.Frame(frame_principal, bg='purple')
@@ -104,26 +70,6 @@ lista_tarefas.pack(side=tk.LEFT, padx=10, pady=10, fill='both', expand=True)
 # Adicionando o calendário
 calendario = Calendar(frame_lista_calendario, selectmode='day', font=('JetBrains Mono', 12), background='white', foreground='black', bordercolor='black')
 calendario.pack(side=tk.RIGHT, pady=10, padx=10, fill='both', expand=True)
-calendario.bind("<<CalendarSelected>>", mostrar_tarefas_do_dia)
-
-# Dados aleatórios para teste
-tarefas = {
-    '07/01/2024': [
-        "01/07/2024 (Monday/Lundi): Estudar Python - 120 minutos",
-        "01/07/2024 (Monday/Lundi): Ler livro - 60 minutos"
-    ],
-    '07/02/2024': [
-        "02/07/2024 (Tuesday/Mardi): Exercício físico - 45 minutos",
-        "02/07/2024 (Tuesday/Mardi): Meditar - 30 minutos"
-    ],
-    '07/03/2024': [
-        "03/07/2024 (Wednesday/Mercredi): Trabalho - 90 minutos"
-    ],
-    '07/04/2024': []
-}
-
-# Adiciona as tarefas de teste à lista
-atualizar_tarefas(calendario.get_date())
 
 # Exibição da data atual em francês e inglês
 locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
@@ -136,9 +82,16 @@ ttk.Label(frame_principal, text=f"Hoje é {data_atual_en} / {data_atual_fr}", ba
 frame_opcoes = tk.Frame(frame_principal)
 frame_opcoes.pack(pady=10, padx=10, fill='x')
 
-cores = ['purple', 'blue', 'green', 'gray', 'red', 'orange', 'yellow', 'pink']
-for cor in cores:
-    botao = ttk.Button(frame_opcoes, text=cor.capitalize(), command=lambda cor=cor: trocar_fundo(cor))
-    botao.pack(side=tk.LEFT, padx=5)
+botao_roxo = ttk.Button(frame_opcoes, text="Roxo", command=lambda: trocar_fundo('purple'))
+botao_roxo.pack(side=tk.LEFT, padx=5)
+
+botao_azul = ttk.Button(frame_opcoes, text="Azul", command=lambda: trocar_fundo('blue'))
+botao_azul.pack(side=tk.LEFT, padx=5)
+
+botao_verde = ttk.Button(frame_opcoes, text="Verde", command=lambda: trocar_fundo('green'))
+botao_verde.pack(side=tk.LEFT, padx=5)
+
+botao_cinza = ttk.Button(frame_opcoes, text="Cinza", command=lambda: trocar_fundo('gray'))
+botao_cinza.pack(side=tk.LEFT, padx=5)
 
 root.mainloop()
