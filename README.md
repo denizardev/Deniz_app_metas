@@ -2,7 +2,7 @@
 
 ## Descrição
 
-O **MetaDiaria - Denizard** é um aplicativo desenvolvido em Python com Tkinter para gerenciamento de tarefas diárias. O objetivo do aplicativo é permitir que os usuários adicionem, visualizem e organizem suas tarefas, além de acompanhar o tempo gasto em cada uma delas. O aplicativo também suporta funcionalidades de visualização de tarefas por data, armazenamento de dados em um arquivo Excel e uma interface personalizável com diferentes cores de fundo.
+O **MetaDiaria  é um aplicativo desenvolvido em Python com Tkinter para gerenciamento de tarefas diárias. O objetivo do aplicativo é permitir que os usuários adicionem, visualizem e organizem suas tarefas, além de acompanhar o tempo gasto em cada uma delas. O aplicativo também suporta funcionalidades de visualização de tarefas por data, armazenamento de dados em um arquivo Excel e uma interface personalizável com diferentes cores de fundo.
 
 ## Funcionalidades Implementadas
 
